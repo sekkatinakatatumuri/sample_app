@@ -26,5 +26,5 @@
 # Ignore Spring files.
 /spring/*.pid
 
-# Ignore testing rubycode
+# Ignore testing rubycode file
 ./test.rb
