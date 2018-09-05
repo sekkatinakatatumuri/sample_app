@@ -11,4 +11,6 @@ class ActiveSupport::TestCase
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
+  # test環境でもApplicationヘルパーを使えるようにする
+  include ApplicationHelper
 end
