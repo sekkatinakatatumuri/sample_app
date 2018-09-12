@@ -1,7 +1,7 @@
 require 'test_helper'
 
 class UsersSignupTest < ActionDispatch::IntegrationTest
-  
+
   # 失敗時テスト
   test "invalid signup information" do
     # getメソッドを使ってユーザー登録ページにアクセス
@@ -26,7 +26,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     assert_select 'div#error_explanation'
     assert_select 'div.field_with_errors'
   end
-    
+
   # 成功時テスト
   test "valid signup information" do
     get signup_path
@@ -41,5 +41,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
     follow_redirect!
     assert_template 'users/show'
     assert_not flash.empty?
+    # ユーザー登録後ユーザーがログイン状態になっているかどうかを確認
+    assert is_logged_in?
   end
 end
