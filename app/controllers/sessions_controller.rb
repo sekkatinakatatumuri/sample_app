@@ -7,6 +7,8 @@ class SessionsController < ApplicationController
     # ユーザーがデータベースにあり、かつ、認証に成功した場合
     if user && user.authenticate(params[:session][:password])
       log_in user
+      # ログインしたユーザーを記憶するヘルパーメソッド
+      remember user
       redirect_to user
     else
       # エラーメッセージを作成する
