@@ -33,6 +33,8 @@ module SessionsHelper
     if (user_id = session[:user_id])
       @current_user ||= User.find_by(id: user_id)
     elsif (user_id = cookies.signed[:user_id])
+      # テストがパスすれば、この部分がテストされていないことがわかる
+      # raise
       user = User.find_by(id: user_id)
       if user && user.authenticated?(cookies[:remember_token])
         log_in user
@@ -44,5 +46,10 @@ module SessionsHelper
   # ユーザーがログインしていればtrue、その他ならfalseを返す
   def logged_in?
     !current_user.nil?
+  end
+  
+  # テストユーザーとしてログインする
+  def log_in_as(user)
+    session[:user_id] = user.id
   end
 end
