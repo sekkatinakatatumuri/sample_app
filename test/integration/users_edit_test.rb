@@ -8,6 +8,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
 
   # ユーザ編集失敗時テスト
   test "unsuccessful edit" do
+    log_in_as(@user)
     get edit_user_path(@user)
     assert_template 'users/edit'
     patch user_path(@user), params: { user: { name:  "",
@@ -20,6 +21,8 @@ class UsersEditTest < ActionDispatch::IntegrationTest
   
   # ユーザ編集成功時テスト
   test "successful edit" do
+    # テストユーザでログインする
+    log_in_as(@user)
     # ユーザー情報を更新する正しい振る舞い
     get edit_user_path(@user)
     assert_template 'users/edit'
