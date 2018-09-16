@@ -18,7 +18,7 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     assert_template 'users/edit'
     assert_select "div.alert", "The form contains 4 errors."
   end
-  
+
   # ユーザ編集成功時テスト
   test "successful edit" do
     # テストユーザでログインする
@@ -40,5 +40,24 @@ class UsersEditTest < ActionDispatch::IntegrationTest
     @user.reload
     assert_equal name,  @user.name
     assert_equal email, @user.email
+  end
+
+  # editアクションの保護に対するテスト
+  test "should redirect edit when not logged in" do
+    # getでeditアクションを実行
+    get edit_user_path(@user)
+    # flashにメッセージが代入されたか確認
+    assert_not flash.empty?
+    # ログイン画面にリダイレクトされたか確認
+    assert_redirected_to login_url
+  end
+  
+  # updateアクションの保護に対するテスト
+  test "should redirect update when not logged in" do
+    # patchでeditアクションを実行
+    patch user_path(@user), params: { user: { name: @user.name,
+                                              email: @user.email } }
+    assert_not flash.empty?
+    assert_redirected_to login_url
   end
 end
