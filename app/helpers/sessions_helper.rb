@@ -27,7 +27,7 @@ module SessionsHelper
     session.delete(:user_id)
     @current_user = nil
   end
-  
+
   # 渡されたユーザーがログイン済みユーザーであればtrueを返す
   def current_user?(user)
     user == current_user
@@ -52,9 +52,26 @@ module SessionsHelper
   def logged_in?
     !current_user.nil?
   end
-  
+
   # テストユーザーとしてログインする
   def log_in_as(user)
     session[:user_id] = user.id
+  end
+
+  # 記憶したURL (もしくはデフォルト値) にリダイレクト
+  def redirect_back_or(default)
+    # リクエストされたURLが存在する場合はそこにリダイレクト
+    # ない場合は何らかのデフォルトのURLにリダイレクト
+    redirect_to(session[:forwarding_url] || default)
+    # 次回ログイン時に保護されたページに転送されないように、転送用のURLを削除
+    session.delete(:forwarding_url)
+  end
+  
+  # アクセスしようとしたURLを覚えておく
+  def store_location
+    # request.original_urlでリクエスト先を取得
+    # リクエストが送られたURLをsession変数の:forwarding_urlキーに格納。
+    # ただし、GETリクエストが送られたときだけ格納
+    session[:forwarding_url] = request.original_url if request.get?
   end
 end
