@@ -13,7 +13,7 @@ class UsersIndexTest < ActionDispatch::IntegrationTest
     # テンプレートの確認
     assert_template 'users/index'
     # ページネーションのリンクがあることを確認
-    assert_select 'div.pagination'
+    assert_select 'div.pagination', count:2
     # 最初のページにユーザーがいることを確認
     User.paginate(page: 1).each do |user|
       assert_select 'a[href=?]', user_path(user), text: user.name
