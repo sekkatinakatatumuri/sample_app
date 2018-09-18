@@ -36,6 +36,4 @@ class SiteLayoutTest < ActionDispatch::IntegrationTest
     assert_select "a[href=?]", edit_user_path(@user)    
     assert_select "a[href=?]", logout_path
   end
-  
-  
 end
