@@ -44,6 +44,8 @@ class UsersController < ApplicationController
 
     # paramsハッシュでは:user属性を必須とし、
     # 名前、メールアドレス、パスワード、パスワードの確認の属性をそれぞれ許可
+    # admin属性を許可しないことで、
+    # 任意のユーザーが自分自身にアプリケーションの管理者権限を与えることを防止
     def user_params
       params.require(:user).permit(:name, :email, :password, :password_confirmation)
     end
