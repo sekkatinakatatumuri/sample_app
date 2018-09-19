@@ -1,11 +1,16 @@
 class User < ApplicationRecord
-  attr_accessor :remember_token
+  attr_accessor :remember_token, :activation_token
 
   # Userモデルの中では右式のselfを省略できる
   # before_save { self.email = email.downcase }
   # before_save { self.email = self.email.downcase }
   # 破壊的downcaseに変更
-  before_save { email.downcase! }
+  # before_save { email.downcase! }
+  # 上記をメソッド参照に切り替える
+  before_save   :downcase_email
+  
+  # オブジェクトが作成されたときだけコールバックを呼び出す
+  before_create :create_activation_digest
 
   # 名前
   # メソッドの最後の引数としてハッシュを渡す場合、波カッコを付けなくてもよい
@@ -56,4 +61,17 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
+  
+    private
+    
+    # メールアドレスをすべて小文字にする
+    def downcase_email
+      self.email = email.downcase
+    end
+    
+    # 有効化トークンとダイジェストを作成および代入する
+    def create_activation_digest
+      self.activation_token  = User.new_token
+      self.activation_digest = User.digest(activation_token)
+    end
 end
