@@ -1,4 +1,5 @@
 class ApplicationMailer < ActionMailer::Base
-  default from: 'from@example.com'
+  # fromアドレスのデフォルト値を更新
+  default from: "noreply@example.com"
   layout 'mailer'
 end
