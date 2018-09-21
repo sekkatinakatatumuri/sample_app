@@ -8,7 +8,7 @@ class User < ApplicationRecord
   # before_save { email.downcase! }
   # 上記をメソッド参照に切り替える
   before_save   :downcase_email
-  
+
   # オブジェクトが作成されたときだけコールバックを呼び出す
   before_create :create_activation_digest
 
@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   # パスワード
   has_secure_password
-  validates :password, presence: true, 
+  validates :password, presence: true,
                        length: { minimum: 6 },
                        allow_nil: true
 
@@ -62,26 +62,26 @@ class User < ApplicationRecord
   def forget
     update_attribute(:remember_digest, nil)
   end
-  
+
   # アカウントを有効にする
   def activate
     update_attribute(:activated,    true)
     update_attribute(:activated_at, Time.zone.now)
   end
-
+  
   # 有効化用のメールを送信する
   def send_activation_email
     UserMailer.account_activation(self).deliver_now
   end
-  
+
     private
-    
+
     # メールアドレスをすべて小文字にする
     def downcase_email
       # self.email = email.downcase
       self.email.downcase!
     end
-    
+
     # 有効化トークンとダイジェストを作成および代入する
     def create_activation_digest
       self.activation_token  = User.new_token
