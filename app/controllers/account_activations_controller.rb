@@ -6,8 +6,8 @@ class AccountActivationsController < ApplicationController
     # 既に有効になっているユーザーを誤って再度有効化しないため
     if user && !user.activated? && user.authenticated?(:activation, params[:id])
       # ユーザーを認証してからactivated_atタイムスタンプを更新
-      user.update_attribute(:activated,    true)
-      user.update_attribute(:activated_at, Time.zone.now)
+      # ユーザーモデルオブジェクト経由でアカウントを有効化
+      user.activate
       log_in user
       flash[:success] = "Account activated!"
       redirect_to user
