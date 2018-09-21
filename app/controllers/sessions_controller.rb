@@ -7,7 +7,7 @@ class SessionsController < ApplicationController
     # ユーザーがデータベースにあり、かつ、認証に成功した場合
     if @user && @user.authenticate(params[:session][:password])
       # 有効なユーザーの場合ログインする
-      if user.activated?
+      if @user.activated?
         log_in @user
         # ログインしたユーザーを記憶するヘルパーメソッド
         params[:session][:remember_me] == '1' ? remember(@user) : forget(@user)

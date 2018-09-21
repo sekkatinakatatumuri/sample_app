@@ -2,6 +2,10 @@ require 'test_helper'
 
 class UsersSignupTest < ActionDispatch::IntegrationTest
 
+  def setup
+    ActionMailer::Base.deliveries.clear
+  end
+
   # 失敗時テスト
   test "invalid signup information" do
     # getメソッドを使ってユーザー登録ページにアクセス
@@ -28,7 +32,7 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
   end
 
   # 成功時テスト
-  test "valid signup information" do
+  test "valid signup information with account activation" do
     get signup_path
     assert_difference 'User.count', 1 do
       post users_path, params: { user: { name:  "Example User",
@@ -36,15 +40,29 @@ class UsersSignupTest < ActionDispatch::IntegrationTest
                                          password:              "password",
                                          password_confirmation: "password" } }
     end
+    # 配信されたメッセージが1つであるかどうかを確認
+    assert_equal 1, ActionMailer::Base.deliveries.size
+    # assignsメソッドを使うと対応するアクション内のインスタンス変数にアクセスできる
+    user = assigns(:user)
+    assert_not user.activated?
+    # 有効化していない状態でログインしてみる
+    log_in_as(user)
+    assert_not is_logged_in?
+    # 有効化トークンが不正な場合
+    get edit_account_activation_path("invalid token", email: user.email)
+    assert_not is_logged_in?
+    # トークンは正しいがメールアドレスが無効な場合
+    get edit_account_activation_path(user.activation_token, email: 'wrong')
+    assert_not is_logged_in?
+    # 有効化トークンが正しい場合
+    get edit_account_activation_path(user.activation_token, email: user.email)
+    assert user.reload.activated?
     # POSTリクエストを送信した結果を見て、
     # 指定されたリダイレクト先に移動するメソッド
     follow_redirect!
-    
-    # 失敗するテストを一時的にコメントアウト
-    
-    # assert_template 'users/show'
+    assert_template 'users/show'
     assert_not flash.empty?
     # ユーザー登録後ユーザーがログイン状態になっているかどうかを確認
-    # assert is_logged_in?
+    assert is_logged_in?
   end
 end
