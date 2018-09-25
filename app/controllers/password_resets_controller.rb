@@ -35,6 +35,8 @@ class PasswordResetsController < ApplicationController
     # 新しいパスワードが正しければ更新
     elsif @user.update_attributes(user_params)
       log_in @user
+      # パスワード再設定が成功したらダイジェストをnilにする
+      @user.update_attribute(:reset_digest, nil)
       flash[:success] = "Password has been reset."
       redirect_to @user
     else
@@ -61,7 +63,7 @@ class PasswordResetsController < ApplicationController
         redirect_to root_url
       end
     end
-    
+
     # トークンが期限切れかどうか確認
     def check_expiration
       if @user.password_reset_expired?
