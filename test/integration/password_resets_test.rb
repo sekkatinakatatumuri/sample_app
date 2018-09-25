@@ -7,6 +7,7 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
     @user = users(:michael)
   end
 
+  # パスワード再設定のテスト
   test "password resets" do
     get new_password_reset_path
     assert_template 'password_resets/new'
@@ -58,5 +59,22 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
     assert is_logged_in?
     assert_not flash.empty?
     assert_redirected_to user
+  end
+  
+  # 期限切れのパスワード再設定のテスト
+  test "expired token" do
+    get new_password_reset_path
+    post password_resets_path,
+         params: { password_reset: { email: @user.email } }
+
+    @user = assigns(:user)
+    @user.update_attribute(:reset_sent_at, 3.hours.ago)
+    patch password_reset_path(@user.reset_token),
+          params: { email: @user.email,
+                    user: { password:              "foobar",
+                            password_confirmation: "foobar" } }
+    assert_response :redirect
+    follow_redirect!
+    assert_match "expired", response.body   <---注目
   end
 end
