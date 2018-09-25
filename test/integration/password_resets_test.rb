@@ -75,6 +75,6 @@ class PasswordResetsTest < ActionDispatch::IntegrationTest
                             password_confirmation: "foobar" } }
     assert_response :redirect
     follow_redirect!
-    assert_match "expired", response.body   <---注目
+    assert_match "expired", response.body
   end
 end
