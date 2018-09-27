@@ -19,4 +19,16 @@ class MicropostTest < ActiveSupport::TestCase
     @micropost.user_id = nil
     assert_not @micropost.valid?
   end
+
+  # contentの存在性のバリデーションに対するテスト
+  test "content should be present" do
+    @micropost.content = "   "
+    assert_not @micropost.valid?
+  end
+
+  # contenの文字数が141文字を超えた場合のテスト
+  test "content should be at most 140 characters" do
+    @micropost.content = "a" * 141
+    assert_not @micropost.valid?
+  end
 end
