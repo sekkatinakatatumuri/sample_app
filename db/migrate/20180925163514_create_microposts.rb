@@ -6,6 +6,7 @@ class CreateMicroposts < ActiveRecord::Migration[5.1]
 
       t.timestamps
     end
+    # 複合キーインデックスを作成
     add_index :microposts, [:user_id, :created_at]
   end
 end
