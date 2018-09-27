@@ -23,3 +23,11 @@ User.create!(name:  "Example User",
               activated: true,
               activated_at: Time.zone.now)
 end
+
+# orderメソッドを経由することで、明示的に最初の(IDが小さい順に)6人を呼び出す
+users = User.order(:created_at).take(6)
+# 上記の6人に50個分のマイクロポストを追加する
+50.times do
+  content = Faker::Lorem.sentence(5)
+  users.each { |user| user.microposts.create!(content: content) }
+end
