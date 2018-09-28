@@ -94,6 +94,11 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
+  # 現在ログインしているユーザーのマイクロポストをすべて取得
+  def feed
+    Micropost.where("user_id = ?", id)
+  end
+
     private
 
     # メールアドレスをすべて小文字にする
