@@ -45,6 +45,7 @@ class MicropostsInterfaceTest < ActionDispatch::IntegrationTest
     log_in_as(other_user)
     get root_path
     assert_match "0 microposts", response.body
+    # 1つ投稿したユーザー
     other_user.microposts.create!(content: "A micropost")
     get root_path
     assert_match "1 micropost", response.body
