@@ -28,3 +28,6 @@
 
 # Ignore testing rubycode file
 ./test.rb
+
+# アップロードされたテスト画像を無視する
+/public/uploads
