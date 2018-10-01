@@ -95,7 +95,7 @@ class UserTest < ActiveSupport::TestCase
   test "authenticated? should return false for a user with nil digest" do
     assert_not @user.authenticated?(:remember, '')
   end
-  
+
   # ユーザーを削除したとき、関連するマイクロポストが破棄されるかテスト
   test "associated microposts should be destroyed" do
     @user.save
@@ -103,5 +103,21 @@ class UserTest < ActiveSupport::TestCase
     assert_difference 'Micropost.count', -1 do
       @user.destroy
     end
+  end
+
+  # フォロー・アンフォロー関連のメソッドのテスト
+  test "should follow and unfollow a user" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    # following?メソッドでarcherをまだフォローしていないことを確認
+    assert_not michael.following?(archer)
+    # followメソッドを使ってarcherをフォロー
+    michael.follow(archer)
+    # archerをフォロー中になったことを確認
+    assert michael.following?(archer)
+    # unfollowメソッドでarcherをフォロー解除
+    michael.unfollow(archer)
+    # archerをフォロー解除できたことを確認
+    assert_not michael.following?(archer)
   end
 end
