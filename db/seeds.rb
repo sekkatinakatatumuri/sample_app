@@ -1,6 +1,7 @@
+## ユーザー
+
 # Example Userという名前とメールアドレスを持つ1人のユーザと、
 # それらしい名前とメールアドレスを持つ99人のユーザーを作成
-
 # create!は基本的にcreateメソッドと同じものですが、
 # ユーザーが無効な場合にfalseを返すのではなく例外を発生させる
 # admin: trueで管理者ユーザを作成
@@ -24,6 +25,8 @@ User.create!(name:  "Example User",
               activated_at: Time.zone.now)
 end
 
+## マイクロポスト
+
 # orderメソッドを経由することで、明示的に最初の(IDが小さい順に)6人を呼び出す
 users = User.order(:created_at).take(6)
 # 上記の6人に50個分のマイクロポストを追加する
@@ -31,3 +34,14 @@ users = User.order(:created_at).take(6)
   content = Faker::Lorem.sentence(5)
   users.each { |user| user.microposts.create!(content: content) }
 end
+
+## リレーションシップ
+
+# 最初のユーザーにユーザー3からユーザー51までをフォローさせ、
+# それから逆にユーザー4からユーザー41に最初のユーザーをフォローさせる
+users = User.all
+user  = users.first
+following = users[2..50]
+followers = users[3..40]
+following.each { |followed| user.follow(followed) }
+followers.each { |follower| follower.follow(user) }
