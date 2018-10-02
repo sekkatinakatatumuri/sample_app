@@ -67,7 +67,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to root_url
   end
 
-  # 未ログインしていないユーザーでdestroyアクションを実行するテスト
+  # 未ログインユーザーでdestroyアクションを実行するテスト
   test "should redirect destroy when not logged in" do
     # ユーザー数が変化しないことを確認
     assert_no_difference 'User.count' do
@@ -76,7 +76,7 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     # ログイン画面にリダイレクト
     assert_redirected_to login_url
   end
-  
+
   # ログイン済みだが管理者でないユーザーでdestroyアクションを実行するのテスト
   test "should redirect destroy when logged in as a non-admin" do
     log_in_as(@other_user)
@@ -85,5 +85,17 @@ class UsersControllerTest < ActionDispatch::IntegrationTest
     end
     # ホーム画面にリダイレクト
     assert_redirected_to root_url
+  end
+
+  # 未ログインユーザーでfollowingアクションを実行するテスト
+  test "should redirect following when not logged in" do
+    get following_user_path(@user)
+    assert_redirected_to login_url
+  end
+  
+  # 未ログインユーザーでfollowersアクションを実行するテスト
+  test "should redirect followers when not logged in" do
+    get followers_user_path(@user)
+    assert_redirected_to login_url
   end
 end
