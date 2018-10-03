@@ -106,8 +106,26 @@ class User < ApplicationRecord
   def feed
     # 現在ログインしているユーザーのマイクロポストをすべて取得
     # Micropost.where("user_id = ?", id)
+  
+    # 現在ログインしているユーザーのマイクロポストと、
     # フォローしているユーザーのマイクロポストをすべて取得
-    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    # Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
+    
+    # 前者の疑問符を使った文法も便利ですが、
+    # 同じ変数を複数の場所に挿入したい場合は、
+    # 後者の置き換え後の文法を使う方がより便利
+    
+    # リファクタリング
+    # Micropost.where("user_id IN (:following_ids) OR user_id = :user_id",
+    # following_ids: following_ids, user_id: id)
+     
+    # 最終的な実装
+    following_ids = "SELECT followed_id 
+                       FROM relationships
+                      WHERE follower_id = :user_id"
+                      
+    Micropost.where("user_id IN (#{following_ids})
+                     OR user_id = :user_id", user_id: id)
   end
 
   # ユーザーをフォローする
