@@ -8,7 +8,6 @@ class User < ApplicationRecord
                                    dependent:   :destroy
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships, source: :follower
-  
 
   attr_accessor :remember_token, :activation_token, :reset_token
 
@@ -104,21 +103,23 @@ class User < ApplicationRecord
     reset_sent_at < 2.hours.ago
   end
 
-  # 現在ログインしているユーザーのマイクロポストをすべて取得
   def feed
-    Micropost.where("user_id = ?", id)
+    # 現在ログインしているユーザーのマイクロポストをすべて取得
+    # Micropost.where("user_id = ?", id)
+    # フォローしているユーザーのマイクロポストをすべて取得
+    Micropost.where("user_id IN (?) OR user_id = ?", following_ids, id)
   end
 
   # ユーザーをフォローする
   def follow(other_user)
     following << other_user
   end
-  
+
   # ユーザーをフォロー解除する
   def unfollow(other_user)
     active_relationships.find_by(followed_id: other_user.id).destroy
   end
-  
+
   # 現在のユーザーがフォローしてたらtrueを返す
   def following?(other_user)
     following.include?(other_user)

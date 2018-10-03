@@ -19,7 +19,7 @@ class FollowingTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", user_path(user)
     end
   end
-  
+
   # フォロワー画面のテスト
   test "followers page" do
     get followers_user_path(@user)
@@ -29,14 +29,14 @@ class FollowingTest < ActionDispatch::IntegrationTest
       assert_select "a[href=?]", user_path(user)
     end
   end
-  
+
   # 標準版のフォローに対するテスト
   test "should follow a user the standard way" do
     assert_difference '@user.following.count', 1 do
       post relationships_path, params: { followed_id: @other.id }
     end
   end
-  
+
   # Ajax版のフォローに対するテスト
   test "should follow a user with Ajax" do
     # POSTリクエストを送信し、フォローしている数が1つ増えることを確認
@@ -44,7 +44,7 @@ class FollowingTest < ActionDispatch::IntegrationTest
       post relationships_path, xhr: true, params: { followed_id: @other.id }
     end
   end
-  
+
   # 標準版のアンフォローに対するテスト
   test "should unfollow a user the standard way" do
     @user.follow(@other)
@@ -53,7 +53,7 @@ class FollowingTest < ActionDispatch::IntegrationTest
       delete relationship_path(relationship)
     end
   end
-  
+
   # Ajax版のアンフォローに対するテスト
   test "should unfollow a user with Ajax" do
     @user.follow(@other)

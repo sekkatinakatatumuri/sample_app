@@ -122,4 +122,27 @@ class UserTest < ActiveSupport::TestCase
     # archerをフォロー解除できたことを確認
     assert_not michael.following?(archer)
   end
+
+  # 現在のユーザーによってフォローされているユーザーに対応する
+  # ユーザーidを持つマイクロポストを取り出し、
+  # 同時に現在のユーザー自身のマイクロポストも一緒に取り出す。
+
+  # ステータスフィードのテスト
+  test "feed should have the right posts" do
+    michael = users(:michael)
+    archer  = users(:archer)
+    lana    = users(:lana)
+    # フォローしているユーザーの投稿を確認
+    lana.microposts.each do |post_following|
+      assert michael.feed.include?(post_following)
+    end
+    # 自分自身の投稿を確認
+    michael.microposts.each do |post_self|
+      assert michael.feed.include?(post_self)
+    end
+    # フォローしていないユーザーの投稿を確認
+    archer.microposts.each do |post_unfollowed|
+      assert_not michael.feed.include?(post_unfollowed)
+    end
+  end
 end
