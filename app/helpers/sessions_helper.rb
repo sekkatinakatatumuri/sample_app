@@ -53,11 +53,6 @@ module SessionsHelper
     !current_user.nil?
   end
 
-  # テストユーザーとしてログインする
-  def log_in_as(user)
-    session[:user_id] = user.id
-  end
-
   # 記憶したURL (もしくはデフォルト値) にリダイレクト
   def redirect_back_or(default)
     # リクエストされたURLが存在する場合はそこにリダイレクト
