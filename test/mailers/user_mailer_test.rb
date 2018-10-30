@@ -3,6 +3,7 @@ require 'test_helper'
 class UserMailerTest < ActionMailer::TestCase
 
   # 送信メールのテスト
+  # http://localhost:3000/rails/mailers/user_mailer/account_activation
   test "account_activation" do
     # fixtureユーザーに有効化トークンを追加
     user = users(:michael)
@@ -19,6 +20,7 @@ class UserMailerTest < ActionMailer::TestCase
   end
   
   # パスワード再設定用メイラーメソッドのテスト
+  # http://localhost:3000/rails/mailers/user_mailer/password_reset
   test "password_reset" do
     user = users(:michael)
     user.reset_token = User.new_token
