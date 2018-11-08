@@ -9,7 +9,9 @@ class RelationshipsController < ApplicationController
     current_user.follow(@user)
     # 元のプロフィールにリダイレクト
     respond_to do |format|
+      # 普通のform_forが実行された場合に実行する処理
       format.html { redirect_to @user }
+      # jsのコードが実行された場合に実行する処理
       format.js
     end
   end
