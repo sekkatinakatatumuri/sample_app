@@ -12,6 +12,8 @@ class RelationshipsController < ApplicationController
       # 普通のform_forが実行された場合に実行する処理
       format.html { redirect_to @user }
       # jsのコードが実行された場合に実行する処理
+      # format.jsで何も指定しない場合、デフォルトで下記コードを実行する
+      # => app/views/relationships/create.js.erb
       format.js
     end
   end
